@@ -596,6 +596,14 @@ async def _health(request: StarletteRequest) -> JSONResponse:
     return JSONResponse({"status": "healthy", "service": "cw-sell"})
 
 
+def main():
+    transport = os.getenv("MCP_TRANSPORT", "http").lower()
+    if transport == "stdio":
+        mcp.run(transport="stdio")
+    else:
+        port = int(os.getenv("SELL_MCP_PORT", "8086"))
+        mcp.run(transport="http", host="0.0.0.0", port=port)
+
+
 if __name__ == "__main__":
-    port = int(os.getenv("SELL_MCP_PORT", "8086"))
-    mcp.run(transport="http", host="0.0.0.0", port=port)
+    main()

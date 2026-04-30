@@ -4,11 +4,24 @@ FastMCP HTTP server wrapping the ConnectWise Sell (Quosal) REST API. 12 tools co
 
 > **Note:** Quotes cannot be created from scratch via the Sell API — new quotes must be copied from an existing quote or template. Use `get_templates` to browse templates, then `copy_quote` to create.
 
-## Quick start
+## Installation
 
+**Via uvx (recommended — no clone, no venv):**
 ```bash
-git clone <this-repo>
-cd connectwise-sell
+uvx connectwise-sell-mcp
+```
+Set credentials via environment variables or a `.env` file in your working directory.
+
+**Via pip:**
+```bash
+pip install connectwise-sell-mcp
+connectwise-sell-mcp
+```
+
+**From source:**
+```bash
+git clone https://github.com/Mfrostbutter/connectwise-sell-mcp
+cd connectwise-sell-mcp
 cp .env.example .env
 # fill in your SELL_* credentials
 python3 -m venv venv && source venv/bin/activate
@@ -16,6 +29,15 @@ pip install -r requirements.txt
 python3 server.py
 # verify: curl http://localhost:8086/health
 ```
+
+## Transport modes
+
+| Mode | How to set | Best for |
+|------|-----------|----------|
+| `http` (default) | `MCP_TRANSPORT=http` | Persistent server shared across sessions or team members |
+| `stdio` | `MCP_TRANSPORT=stdio` | Cursor, VS Code, Zed, Continue, or any stdio-based MCP client |
+
+In stdio mode the server is spawned per-session by the client — no port, no persistent process.
 
 ## Environment variables
 
@@ -50,18 +72,36 @@ The server constructs this automatically from your env vars.
 
 **Reference (3):** `get_templates`, `get_recurring_revenues`, `get_tax_codes`
 
-## Claude Desktop / Claude Code configuration
+## Client configuration
 
-**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json` on Mac, `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
+**HTTP mode** — Claude Desktop, Claude Code (server runs persistently):
 
+`claude_desktop_config.json` / `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
     "connectwise-sell": {
       "type": "http",
       "url": "http://localhost:8086/mcp",
-      "headers": {
-        "Authorization": "Bearer your_token_here"
+      "headers": { "Authorization": "Bearer your_token_here" }
+    }
+  }
+}
+```
+
+**stdio mode** — Cursor, VS Code, Zed, Continue, or any stdio client (server spawned per-session):
+
+```json
+{
+  "mcpServers": {
+    "connectwise-sell": {
+      "command": "uvx",
+      "args": ["connectwise-sell-mcp"],
+      "env": {
+        "SELL_ACCESS_KEY": "your_access_key",
+        "SELL_USERNAME": "your_api_username",
+        "SELL_PASSWORD": "your_password",
+        "MCP_TRANSPORT": "stdio"
       }
     }
   }

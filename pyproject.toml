@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "connectwise-sell-mcp"
+version = "0.1.0"
+description = "ConnectWise Sell (Quosal) MCP server — 12 tools for quotes, line items, templates, and recurring revenue"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["mcp", "connectwise", "sell", "quosal", "cpq", "msp", "ai"]
+dependencies = [
+    "fastmcp>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+connectwise-sell-mcp = "server:main"
+
+[project.urls]
+Homepage = "https://github.com/Mfrostbutter/connectwise-sell-mcp"
+Repository = "https://github.com/Mfrostbutter/connectwise-sell-mcp"
+
+[tool.hatch.build.targets.wheel]
+include = ["server.py"]
