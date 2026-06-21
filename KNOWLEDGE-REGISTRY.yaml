@@ -1,0 +1,50 @@
+# machine-readable navigation index — agents read this, humans read README.md
+meta:
+  domain: connectwise-sell-mcp (ConnectWise Sell MCP server, root)
+  last_updated: "2026-06-15"
+  purpose: Wayfinding index for the ConnectWise Sell (Quosal) MCP server — a standalone, published product.
+  canonical_home: "GitHub Mfrostbutter/connectwise-sell-mcp + PyPI connectwise-sell-mcp. Vendored into Agenius-AI-Labs as a git submodule."
+  product: "FastMCP server wrapping the ConnectWise Sell (Quosal) REST API. 12 tools across Quotes, Line Items, Tabs, Customers, Terms, Templates, Recurring Revenue, Tax Codes."
+
+read_first:
+  - path: README.md
+    note: Install (uvx/pip/source), transport modes, env vars, auth scheme, tool list, client config, service unit.
+  - path: server.py
+    note: Single-file implementation. Builds the compound Basic-auth credential automatically.
+  - path: .env.example
+    note: Required SELL_* credentials and optional MCP_AUTH_TOKEN / port.
+
+layout:
+  - path: server.py
+    what: The MCP server implementation (all tools).
+  - path: requirements.txt
+    what: Runtime dependencies.
+  - path: pyproject.toml
+    what: Packaging metadata (uvx/pip entry point connectwise-sell-mcp).
+  - path: README.md
+    what: Product documentation.
+  - path: LICENSE
+    what: MIT.
+
+interface:
+  transport: "http (default, port 8086) or stdio (MCP_TRANSPORT=stdio)"
+  auth: "HTTP Basic with compound credential base64(accessKey+username:password), built by the server."
+  tool_domains: [Quotes, "Quote detail", Reference]
+  gotcha: "Quotes cannot be created from scratch — copy from an existing quote or template (get_templates -> copy_quote)."
+
+hard_rules:
+  - rule: "Standalone marketplace product — README/spec it as such, never offload features to private infra."
+    ref: memory feedback_apify_actors_are_products
+  - rule: "Never hardcode SELL credentials. Env vars or .env only."
+  - rule: No em dashes.
+    ref: memory feedback_no_em_dashes
+
+siblings:
+  - path: "../connectwise-live/KNOWLEDGE-REGISTRY.yaml"
+    note: Companion ConnectWise Manage MCP server (tickets, agreements, companies, time, finance).
+  - path: "../../../KNOWLEDGE-REGISTRY.yaml"
+    note: "Agenius-AI-Labs root registry (this repo is vendored there as a submodule)."
+
+maintenance:
+  - Update when tools are added/removed.
+  - Keep in sync with README.md tool counts and env-var table.
